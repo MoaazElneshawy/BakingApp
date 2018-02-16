@@ -43,6 +43,7 @@ public class RecipeDetailsActivity extends AppCompatActivity
     IngredientDetailsFragment ingredientDetailsFragment;
     StepDetailsFragment stepDetailsFragment;
     FragmentManager manager;
+
     boolean twoPaneMode;
 
     @Override
@@ -55,6 +56,7 @@ public class RecipeDetailsActivity extends AppCompatActivity
 
         initialFragments();
         Intent intent = this.getIntent();
+
         if (intent != null) {
             mRecipeToolbar.setText(intent.getStringExtra(Constants.RECIPE));
             steps = intent.getParcelableArrayListExtra(Constants.STEPS);
