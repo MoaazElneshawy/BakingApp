@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.moaazfathy.bakingapp.Constants;
 import com.example.moaazfathy.bakingapp.Fragments.IngredientDetailsFragment;
@@ -20,30 +21,35 @@ import com.example.moaazfathy.bakingapp.Fragments.StepsFragment;
 import com.example.moaazfathy.bakingapp.Models.Ingredients;
 import com.example.moaazfathy.bakingapp.Models.Steps;
 import com.example.moaazfathy.bakingapp.R;
+import com.example.moaazfathy.bakingapp.Widget.IngredientDetailsListService;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class RecipeDetailsActivity extends AppCompatActivity
         implements IngredientFragment.OnIngredientClickListener, StepsFragment.OnStepClickListener {
 
     @BindView(R.id.recipe_toolbar)
     TextView mRecipeToolbar;
+    @BindView(R.id.recipe_toolbar_add_widget)
+    TextView mAddWidget;
+
     @BindView(R.id.recipe_ingredient_container)
     FrameLayout mRecipeIngredientsFrame;
     @BindView(R.id.recipe_steps_container)
     FrameLayout mRecipeStepsFrame;
 
     ArrayList<Steps> steps;
-    ArrayList<Ingredients> ingredients;
+    public static ArrayList<Ingredients> ingredients;
     IngredientFragment ingredientFragment;
     StepsFragment stepsFragment;
     IngredientDetailsFragment ingredientDetailsFragment;
     StepDetailsFragment stepDetailsFragment;
     FragmentManager manager;
-
+    public static String title;
     boolean twoPaneMode;
 
     @Override
@@ -58,19 +64,20 @@ public class RecipeDetailsActivity extends AppCompatActivity
         Intent intent = this.getIntent();
 
         if (intent != null) {
-            mRecipeToolbar.setText(intent.getStringExtra(Constants.RECIPE));
             steps = intent.getParcelableArrayListExtra(Constants.STEPS);
             ingredients = intent.getParcelableArrayListExtra(Constants.INGREDIENTS);
             stepsFragment.setSteps(steps);
             ingredientFragment.setIngredients(ingredients);
+            title = intent.getStringExtra(Constants.RECIPE);
         }
         if (savedInstanceState != null) {
             steps = savedInstanceState.getParcelableArrayList(Constants.STEPS);
             ingredients = savedInstanceState.getParcelableArrayList(Constants.INGREDIENTS);
             stepsFragment.setSteps(steps);
             ingredientFragment.setIngredients(ingredients);
+            title = savedInstanceState.getString(Constants.RECIPE);
         }
-
+        mRecipeToolbar.setText(title);
         if (findViewById(R.id.details_container) != null) {
             twoPaneMode = true;
         }
@@ -108,7 +115,7 @@ public class RecipeDetailsActivity extends AppCompatActivity
 
 
     @Override
-    public void onStepClicked(String description, String video,String thumbnail) {
+    public void onStepClicked(String description, String video, String thumbnail) {
         if (stepDetailsFragment != null) {
             if (twoPaneMode) {
                 stepDetailsFragment.setVideo(video);
@@ -132,6 +139,7 @@ public class RecipeDetailsActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(Constants.STEPS, steps);
         outState.putParcelableArrayList(Constants.INGREDIENTS, ingredients);
+        outState.putString(Constants.RECIPE, title);
     }
 
     @Override
@@ -139,6 +147,15 @@ public class RecipeDetailsActivity extends AppCompatActivity
         super.onRestoreInstanceState(savedInstanceState);
         savedInstanceState.getParcelableArrayList(Constants.STEPS);
         savedInstanceState.getParcelableArrayList(Constants.INGREDIENTS);
+        savedInstanceState.getString(Constants.RECIPE);
     }
 
+    @OnClick(R.id.recipe_toolbar_add_widget)
+    void createWidget() {
+        if (ingredients != null) {
+           if (IngredientDetailsListService.startActionChangeIngredientList(this)){
+               Toast.makeText(this, ""+title+"'s Recipe Added", Toast.LENGTH_SHORT).show();
+           }
+        }
+    }
 }

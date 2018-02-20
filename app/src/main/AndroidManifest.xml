@@ -13,9 +13,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Activities.MainActivity" />
         <activity
-            android:theme="@style/Base.Theme.AppCompat.Light"
             android:name=".Activities.SplashActivity"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:theme="@style/Base.Theme.AppCompat.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +26,7 @@
         <activity android:name=".Activities.IngredientDetailsActivity" />
         <activity android:name=".Activities.StepDetailsActivity" />
 
-        <receiver android:name=".RecipeWidget">
+        <receiver android:name=".Widget.RecipeWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -35,6 +35,12 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/recipe_widget_info" />
         </receiver>
+
+        <service
+            android:name=".Widget.IngredientDetailsListService"
+            android:exported="false"></service>
+        <service android:name=".Widget.WidgetListViewService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>
