@@ -1,10 +1,12 @@
 package com.example.moaazfathy.bakingapp.Widget;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import com.example.moaazfathy.bakingapp.Activities.RecipeDetailsActivity;
+import com.example.moaazfathy.bakingapp.Constants;
 import com.example.moaazfathy.bakingapp.Models.Ingredients;
 import com.example.moaazfathy.bakingapp.R;
 
@@ -18,8 +20,10 @@ public class WidgetListViewFactory implements RemoteViewsService.RemoteViewsFact
 
     public WidgetListViewFactory(Context context) {
         this.context = context;
+        preferences = context.getSharedPreferences(Constants.INGREDIENTS, Context.MODE_PRIVATE);
     }
 
+    SharedPreferences preferences;
     Context context;
     ArrayList<Ingredients> ingredients;
 
@@ -30,7 +34,7 @@ public class WidgetListViewFactory implements RemoteViewsService.RemoteViewsFact
 
     @Override
     public void onDataSetChanged() {
-        ingredients = RecipeDetailsActivity.ingredients;
+        ingredients = prefReader();
     }
 
     @Override
@@ -72,5 +76,29 @@ public class WidgetListViewFactory implements RemoteViewsService.RemoteViewsFact
     @Override
     public boolean hasStableIds() {
         return false;
+    }
+
+    private ArrayList<Ingredients> prefReader() {
+
+        int ingredient_size = preferences.getInt(Constants.INGREDIENTS_SIZE, 0);
+        ArrayList<Ingredients> ingredients = new ArrayList<>();
+
+        for (int i = 0; i < ingredient_size; i++) {
+
+            String ingredient = preferences.getString(Constants.INGREDIENT + " " + i, "error");
+            float quantity = preferences.getFloat(Constants.QUANTITY + " " + i, 1);
+            String measure = preferences.getString(Constants.MEASURE + " " + i, "error");
+            Log.e("size", ingredient + " **-** " + quantity+ " **-** " + measure);
+
+            Ingredients ingredientObject = new Ingredients();
+            ingredientObject.setIngredient(ingredient);
+            ingredientObject.setQuantity(quantity);
+            ingredientObject.setMeasure(measure);
+
+            ingredients.add(ingredientObject);
+        }
+
+        Log.e("size", ingredients.size() + " **-** " + ingredient_size);
+        return ingredients;
     }
 }

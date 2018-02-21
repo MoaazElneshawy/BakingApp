@@ -1,8 +1,7 @@
 package com.example.moaazfathy.bakingapp.Activities;
 
 import android.content.Intent;
-import android.os.Parcelable;
-import android.os.PersistableBundle;
+import android.content.SharedPreferences;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -43,7 +42,7 @@ public class RecipeDetailsActivity extends AppCompatActivity
     FrameLayout mRecipeStepsFrame;
 
     ArrayList<Steps> steps;
-    public static ArrayList<Ingredients> ingredients;
+    ArrayList<Ingredients> ingredients;
     IngredientFragment ingredientFragment;
     StepsFragment stepsFragment;
     IngredientDetailsFragment ingredientDetailsFragment;
@@ -51,6 +50,7 @@ public class RecipeDetailsActivity extends AppCompatActivity
     FragmentManager manager;
     public static String title;
     boolean twoPaneMode;
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,7 @@ public class RecipeDetailsActivity extends AppCompatActivity
         ButterKnife.bind(this);
         ActionBar actionBar = this.getSupportActionBar();
         actionBar.hide();
-
+        preferences = getSharedPreferences(Constants.INGREDIENTS, MODE_PRIVATE);
         initialFragments();
         Intent intent = this.getIntent();
 
@@ -81,6 +81,8 @@ public class RecipeDetailsActivity extends AppCompatActivity
         if (findViewById(R.id.details_container) != null) {
             twoPaneMode = true;
         }
+
+        prefCreator(ingredients);
 
     }
 
@@ -153,9 +155,24 @@ public class RecipeDetailsActivity extends AppCompatActivity
     @OnClick(R.id.recipe_toolbar_add_widget)
     void createWidget() {
         if (ingredients != null) {
-           if (IngredientDetailsListService.startActionChangeIngredientList(this)){
-               Toast.makeText(this, ""+title+"'s Recipe Added", Toast.LENGTH_SHORT).show();
-           }
+            if (IngredientDetailsListService.startActionChangeIngredientList(this)) {
+                Toast.makeText(this, "" + title + "'s Recipe Added", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void prefCreator(ArrayList<Ingredients> ingredients) {
+        if (ingredients != null) {
+            for (int i = 0; i < ingredients.size(); i++) {
+                preferences.edit().putString(Constants.INGREDIENT+" " + i, ingredients.get(i).getIngredient()).apply();
+                preferences.edit().putString(Constants.MEASURE+" " + i, ingredients.get(i).getMeasure()).apply();
+                preferences.edit().putFloat(Constants.QUANTITY+" " + i, ingredients.get(i).getQuantity()).apply();
+                Log.e("size", ingredients.get(i).getIngredient() + " **-** " + ingredients.get(i).getQuantity()+ " **-** " + ingredients.get(i).getMeasure());
+
+            }
+            preferences.edit().putInt(Constants.INGREDIENTS_SIZE, ingredients.size()).apply();
+            Log.e("size",ingredients.size()+" **-** ");
+
         }
     }
 }
