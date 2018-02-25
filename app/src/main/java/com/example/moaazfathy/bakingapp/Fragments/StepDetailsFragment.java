@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.example.moaazfathy.bakingapp.Constants;
 import com.example.moaazfathy.bakingapp.Models.Steps;
 import com.example.moaazfathy.bakingapp.R;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -45,9 +47,10 @@ public class StepDetailsFragment extends Fragment {
     TextView mStepVideo;
     @BindView(R.id.step_description)
     TextView mStepDescription;
-
+    long position;
     private SimpleExoPlayer mPlayer;
     private String description, video;
+
     public void setDescription(String description) {
         this.description = description;
     }
@@ -61,11 +64,14 @@ public class StepDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_step_details, container, false);
         ButterKnife.bind(this, view);
-
-        if (savedInstanceState != null) {
-            description = savedInstanceState.getString(Constants.DESCRIPTION);
-            video = savedInstanceState.getString(Constants.VIDEO);
-        }
+//        position = C.TIME_UNSET;
+//        if (savedInstanceState != null) {
+//            description = savedInstanceState.getString(Constants.DESCRIPTION);
+//            video = savedInstanceState.getString(Constants.VIDEO);
+//            position = savedInstanceState.getLong(Constants.VIDEO_STATE);
+//            Log.e("StepDetFrag , getSave", position + "");
+//
+//        }
         setupUi();
 
         return view;
@@ -94,10 +100,13 @@ public class StepDetailsFragment extends Fragment {
             LoadControl control = new DefaultLoadControl();
             mPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), selector, control);
             mVideoPlayer.setPlayer(mPlayer);
+            Log.e("StepDetFrag , setUp", position + "");
 
             String user = Util.getUserAgent(getActivity(), "BakingApp");
             MediaSource mediaSource = new ExtractorMediaSource(uri, new DefaultDataSourceFactory(getActivity(), user), new DefaultExtractorsFactory()
                     , null, null);
+            if (position != C.TIME_UNSET)
+                mPlayer.seekTo(position);
             mPlayer.prepare(mediaSource);
             mPlayer.setPlayWhenReady(true);
         }
@@ -105,9 +114,10 @@ public class StepDetailsFragment extends Fragment {
 
     private void stopPlayer() {
         if (mPlayer != null) {
+            position = mPlayer.getCurrentPosition();
             mPlayer.stop();
             mPlayer.release();
-            mPlayer = null;
+            Log.e("StepDetFrag , Stop", position + "");
         }
     }
 
@@ -122,5 +132,24 @@ public class StepDetailsFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putString(Constants.VIDEO, video);
         outState.putString(Constants.DESCRIPTION, description);
+        outState.putLong(Constants.VIDEO_STATE, position);
+        Log.e("StepDetFrag , outState", position + "");
+
     }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null) {
+            position = C.TIME_UNSET;
+            if (savedInstanceState != null) {
+                description = savedInstanceState.getString(Constants.DESCRIPTION);
+                video = savedInstanceState.getString(Constants.VIDEO);
+                position = savedInstanceState.getLong(Constants.VIDEO_STATE);
+                Log.e("StepDetFrag , getSave", position + "");
+
+            }
+        }
+    }
+
 }

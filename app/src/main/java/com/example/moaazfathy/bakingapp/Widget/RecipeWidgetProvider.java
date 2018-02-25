@@ -1,14 +1,11 @@
 package com.example.moaazfathy.bakingapp.Widget;
 
-import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import com.example.moaazfathy.bakingapp.Activities.IngredientDetailsActivity;
-import com.example.moaazfathy.bakingapp.Activities.MainActivity;
 import com.example.moaazfathy.bakingapp.R;
 
 /**

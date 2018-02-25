@@ -76,6 +76,8 @@ public class RecipeDetailsActivity extends AppCompatActivity
             stepsFragment.setSteps(steps);
             ingredientFragment.setIngredients(ingredients);
             title = savedInstanceState.getString(Constants.RECIPE);
+            stepsFragment = (StepsFragment) getSupportFragmentManager().getFragment(savedInstanceState, "stepsFrag");
+
         }
         mRecipeToolbar.setText(title);
         if (findViewById(R.id.details_container) != null) {
@@ -142,6 +144,8 @@ public class RecipeDetailsActivity extends AppCompatActivity
         outState.putParcelableArrayList(Constants.STEPS, steps);
         outState.putParcelableArrayList(Constants.INGREDIENTS, ingredients);
         outState.putString(Constants.RECIPE, title);
+        getSupportFragmentManager().putFragment(outState, "stepsFrag", stepsFragment);
+
     }
 
     @Override
@@ -164,14 +168,14 @@ public class RecipeDetailsActivity extends AppCompatActivity
     private void prefCreator(ArrayList<Ingredients> ingredients) {
         if (ingredients != null) {
             for (int i = 0; i < ingredients.size(); i++) {
-                preferences.edit().putString(Constants.INGREDIENT+" " + i, ingredients.get(i).getIngredient()).apply();
-                preferences.edit().putString(Constants.MEASURE+" " + i, ingredients.get(i).getMeasure()).apply();
-                preferences.edit().putFloat(Constants.QUANTITY+" " + i, ingredients.get(i).getQuantity()).apply();
-                Log.e("size", ingredients.get(i).getIngredient() + " **-** " + ingredients.get(i).getQuantity()+ " **-** " + ingredients.get(i).getMeasure());
+                preferences.edit().putString(Constants.INGREDIENT + " " + i, ingredients.get(i).getIngredient()).apply();
+                preferences.edit().putString(Constants.MEASURE + " " + i, ingredients.get(i).getMeasure()).apply();
+                preferences.edit().putFloat(Constants.QUANTITY + " " + i, ingredients.get(i).getQuantity()).apply();
+                Log.e("size", ingredients.get(i).getIngredient() + " **-** " + ingredients.get(i).getQuantity() + " **-** " + ingredients.get(i).getMeasure());
 
             }
             preferences.edit().putInt(Constants.INGREDIENTS_SIZE, ingredients.size()).apply();
-            Log.e("size",ingredients.size()+" **-** ");
+            Log.e("size", ingredients.size() + " **-** ");
 
         }
     }

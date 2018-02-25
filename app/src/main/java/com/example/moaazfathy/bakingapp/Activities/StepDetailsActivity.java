@@ -141,7 +141,7 @@ public class StepDetailsActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putString(Constants.DESCRIPTION, description);
         outState.putString(Constants.VIDEO, video);
-        outState.putLong(Constants.VIDEO_STATE, C.TIME_UNSET);
+        outState.putLong(Constants.VIDEO_STATE, position);
         outState.putString(Constants.THUMBNAIL, thumbnail);
     }
 
@@ -152,6 +152,7 @@ public class StepDetailsActivity extends AppCompatActivity {
         video = savedInstanceState.getString(Constants.VIDEO);
         position = savedInstanceState.getLong(Constants.VIDEO_STATE);
         thumbnail = savedInstanceState.getString(Constants.THUMBNAIL);
+
     }
 
 
@@ -173,4 +174,5 @@ public class StepDetailsActivity extends AppCompatActivity {
             setupMediaPlayer(Uri.parse(video));
         }
     }
+
 }
