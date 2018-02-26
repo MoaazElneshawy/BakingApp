@@ -2,6 +2,7 @@ package com.example.moaazfathy.bakingapp.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -76,7 +77,9 @@ public class RecipeDetailsActivity extends AppCompatActivity
             stepsFragment.setSteps(steps);
             ingredientFragment.setIngredients(ingredients);
             title = savedInstanceState.getString(Constants.RECIPE);
-            stepsFragment = (StepsFragment) getSupportFragmentManager().getFragment(savedInstanceState, "stepsFrag");
+//            Fragment f = getSupportFragmentManager().getFragment(savedInstanceState, "stepsFrag");
+//            if (f instanceof StepsFragment)
+//                stepsFragment = (StepsFragment) f;
 
         }
         mRecipeToolbar.setText(title);
@@ -144,7 +147,7 @@ public class RecipeDetailsActivity extends AppCompatActivity
         outState.putParcelableArrayList(Constants.STEPS, steps);
         outState.putParcelableArrayList(Constants.INGREDIENTS, ingredients);
         outState.putString(Constants.RECIPE, title);
-        getSupportFragmentManager().putFragment(outState, "stepsFrag", stepsFragment);
+//        getSupportFragmentManager().putFragment(outState, "stepsFrag", stepsFragment);
 
     }
 
