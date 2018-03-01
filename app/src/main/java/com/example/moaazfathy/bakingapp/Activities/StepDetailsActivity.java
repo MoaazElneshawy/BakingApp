@@ -31,6 +31,7 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class StepDetailsActivity extends AppCompatActivity {
 
@@ -42,7 +43,8 @@ public class StepDetailsActivity extends AppCompatActivity {
     TextView mDescription;
     @BindView(R.id.thumbnail_imageView)
     ImageView mThumbnail;
-
+    @BindView(R.id.step_details_back)
+    ImageView mBack;
     private SimpleExoPlayer mPlayer;
     private String description, video, thumbnail;
     long position;
@@ -59,6 +61,7 @@ public class StepDetailsActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         position = C.TIME_UNSET;
         Log.e("ppsi onCreate", "**" + position);
         if (savedInstanceState != null) {
@@ -170,9 +173,13 @@ public class StepDetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!(video == null || TextUtils.isEmpty(video))){
+        if (!(video == null || TextUtils.isEmpty(video))) {
             setupMediaPlayer(Uri.parse(video));
         }
     }
 
+    @OnClick(R.id.step_details_back)
+    void setmBack() {
+        onBackPressed();
+    }
 }

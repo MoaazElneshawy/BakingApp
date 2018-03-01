@@ -12,24 +12,40 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary">
 
-        <TextView
-            android:id="@+id/recipe_toolbar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:fontFamily="cursive"
-            android:text="@string/recipes"
-            android:textColor="@color/colorWhite"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/recipe_toolbar_add_widget"
-            android:layout_marginRight="2dp"
-            android:layout_gravity="center_vertical|right"
-            android:textColor="@color/colorWhite"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Widget"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/recipe_toolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="cursive"
+                android:text="@string/recipes"
+                android:textColor="@color/colorWhite"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/recipe_toolbar_add_widget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="2dp"
+                android:text="Add Widget"
+                android:textColor="@color/colorWhite" />
+
+            <ImageView
+                android:id="@+id/recipe_details_back"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:padding="10dp"
+                android:src="@drawable/ic_back" />
+        </RelativeLayout>
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout

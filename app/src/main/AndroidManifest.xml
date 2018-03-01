@@ -37,9 +37,13 @@
 
         <service
             android:name=".Widget.IngredientDetailsListService"
-            android:exported="false"></service>
-        <service android:name=".Widget.WidgetListViewService"
+            android:exported="false" />
+        <service
+            android:name=".Widget.WidgetListViewService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
+
+        <activity android:name=".Activities.IngredientDetailsActivity">
+        </activity>
     </application>
 
 </manifest>

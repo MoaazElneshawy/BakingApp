@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     RecipesAdapter adapter;
 
     private Parcelable layoutManagerSavedState;
-    boolean twoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

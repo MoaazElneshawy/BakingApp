@@ -14,16 +14,13 @@ import com.example.moaazfathy.bakingapp.R;
 public class RecipeWidgetProvider extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId, String recipeName) {
+                                int appWidgetId, String recipeName,String ingredients) {
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
         views.setTextViewText(R.id.recipe_widget_title, recipeName);
-        Intent intent = new Intent(context, WidgetListViewService.class);
-        views.setRemoteAdapter(R.id.recipe_widget_list, intent);
-        // Instruct the widget manager to update the widget
+        views.setTextViewText(R.id.recipe_widget_ingredients, ingredients);
         appWidgetManager.updateAppWidget(appWidgetId, views);
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.recipe_widget_list);
     }
 
     @Override
@@ -42,9 +39,9 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    public static void updateIngredientWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds, String recipeName) {
+    public static void updateIngredientWidgets(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds, String recipeName , String ingredients) {
         for (int appWidgetId : appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId, recipeName);
+            updateAppWidget(context, appWidgetManager, appWidgetId, recipeName ,ingredients);
         }
     }
 }

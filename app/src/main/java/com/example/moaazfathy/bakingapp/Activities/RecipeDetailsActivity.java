@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import com.example.moaazfathy.bakingapp.R;
 import com.example.moaazfathy.bakingapp.Widget.IngredientDetailsListService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,7 +38,8 @@ public class RecipeDetailsActivity extends AppCompatActivity
     TextView mRecipeToolbar;
     @BindView(R.id.recipe_toolbar_add_widget)
     TextView mAddWidget;
-
+    @BindView(R.id.recipe_details_back)
+    ImageView mBack;
     @BindView(R.id.recipe_ingredient_container)
     FrameLayout mRecipeIngredientsFrame;
     @BindView(R.id.recipe_steps_container)
@@ -50,6 +53,7 @@ public class RecipeDetailsActivity extends AppCompatActivity
     StepDetailsFragment stepDetailsFragment;
     FragmentManager manager;
     public static String title;
+    public static String INGREDIENTS;
     boolean twoPaneMode;
     SharedPreferences preferences;
 
@@ -60,6 +64,7 @@ public class RecipeDetailsActivity extends AppCompatActivity
         ButterKnife.bind(this);
         ActionBar actionBar = this.getSupportActionBar();
         actionBar.hide();
+
         preferences = getSharedPreferences(Constants.INGREDIENTS, MODE_PRIVATE);
         initialFragments();
         Intent intent = this.getIntent();
@@ -77,17 +82,16 @@ public class RecipeDetailsActivity extends AppCompatActivity
             stepsFragment.setSteps(steps);
             ingredientFragment.setIngredients(ingredients);
             title = savedInstanceState.getString(Constants.RECIPE);
-//            Fragment f = getSupportFragmentManager().getFragment(savedInstanceState, "stepsFrag");
-//            if (f instanceof StepsFragment)
-//                stepsFragment = (StepsFragment) f;
 
         }
         mRecipeToolbar.setText(title);
         if (findViewById(R.id.details_container) != null) {
             twoPaneMode = true;
         }
-
-        prefCreator(ingredients);
+        if (ingredients != null || ingredients.size() > 0) {
+            Log.e("mmmmmmmmmm", ingredients.size() + "");
+            setIngredients(ingredients);
+        }
 
     }
 
@@ -111,12 +115,9 @@ public class RecipeDetailsActivity extends AppCompatActivity
             manager.beginTransaction().replace(R.id.details_container, ingredientDetailsFragment)
                     .commit();
         } else {
-            if (ingredientDetailsFragment != null) {
-                ingredientDetailsFragment.setIngredients(ingredients);
-                manager.beginTransaction().replace(R.id.recipe_ingredient_container, ingredientDetailsFragment)
-                        .addToBackStack("ingredientFragment")
-                        .commit();
-            }
+            Intent intent = new Intent(RecipeDetailsActivity.this, IngredientDetailsActivity.class);
+            intent.putParcelableArrayListExtra(Constants.INGREDIENTS,ingredients);
+            startActivity(intent);
         }
     }
 
@@ -147,7 +148,6 @@ public class RecipeDetailsActivity extends AppCompatActivity
         outState.putParcelableArrayList(Constants.STEPS, steps);
         outState.putParcelableArrayList(Constants.INGREDIENTS, ingredients);
         outState.putString(Constants.RECIPE, title);
-//        getSupportFragmentManager().putFragment(outState, "stepsFrag", stepsFragment);
 
     }
 
@@ -168,18 +168,35 @@ public class RecipeDetailsActivity extends AppCompatActivity
         }
     }
 
-    private void prefCreator(ArrayList<Ingredients> ingredients) {
-        if (ingredients != null) {
-            for (int i = 0; i < ingredients.size(); i++) {
-                preferences.edit().putString(Constants.INGREDIENT + " " + i, ingredients.get(i).getIngredient()).apply();
-                preferences.edit().putString(Constants.MEASURE + " " + i, ingredients.get(i).getMeasure()).apply();
-                preferences.edit().putFloat(Constants.QUANTITY + " " + i, ingredients.get(i).getQuantity()).apply();
-                Log.e("size", ingredients.get(i).getIngredient() + " **-** " + ingredients.get(i).getQuantity() + " **-** " + ingredients.get(i).getMeasure());
+//    private void prefCreator(ArrayList<Ingredients> ingredients) {
+//        if (ingredients != null) {
+//            for (int i = 0; i < ingredients.size(); i++) {
+//                preferences.edit().putString(Constants.INGREDIENT + " " + i, ingredients.get(i).getIngredient()).apply();
+//                preferences.edit().putString(Constants.MEASURE + " " + i, ingredients.get(i).getMeasure()).apply();
+//                preferences.edit().putFloat(Constants.QUANTITY + " " + i, ingredients.get(i).getQuantity()).apply();
+//                Log.e("size", ingredients.get(i).getIngredient() + " **-** " + ingredients.get(i).getQuantity() + " **-** " + ingredients.get(i).getMeasure());
+//
+//            }
+//            preferences.edit().putInt(Constants.INGREDIENTS_SIZE, ingredients.size()).apply();
+//            Log.e("size", ingredients.size() + " **-** ");
+//
+//        }
+//    }
 
-            }
-            preferences.edit().putInt(Constants.INGREDIENTS_SIZE, ingredients.size()).apply();
-            Log.e("size", ingredients.size() + " **-** ");
+    public void setIngredients(List<Ingredients> ingredients) {
 
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < ingredients.size(); i++) {
+            stringBuilder.append("" + (i + 1) +". " + ingredients.get(i).getIngredient() + " - " + ingredients.get(i).getQuantity()
+                    + " " + ingredients.get(i).getMeasure() + "\n");
         }
+        Log.e("mmmmmmmmmm", stringBuilder.toString());
+        INGREDIENTS = stringBuilder.toString();
     }
+
+    @OnClick(R.id.recipe_details_back)
+    void setmBack() {
+        onBackPressed();
+    }
+
 }

@@ -44,7 +44,6 @@ public class IngredientDetailsListService extends IntentService {
     private void handleActionChangeIngredientList() {
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, RecipeWidgetProvider.class));
-        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.recipe_widget_list);
-        RecipeWidgetProvider.updateIngredientWidgets(this, appWidgetManager, appWidgetIds, RecipeDetailsActivity.title);
+        RecipeWidgetProvider.updateIngredientWidgets(this, appWidgetManager, appWidgetIds, RecipeDetailsActivity.title, RecipeDetailsActivity.INGREDIENTS);
     }
 }

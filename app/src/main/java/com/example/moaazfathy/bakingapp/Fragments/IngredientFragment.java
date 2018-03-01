@@ -2,6 +2,8 @@ package com.example.moaazfathy.bakingapp.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.moaazfathy.bakingapp.Constants;
 import com.example.moaazfathy.bakingapp.Models.Ingredients;
 import com.example.moaazfathy.bakingapp.R;
 
@@ -48,7 +51,7 @@ public class IngredientFragment extends Fragment {
     }
 
     @OnClick(R.id.ingredient_card)
-    void onCardClick(){
+    void onCardClick() {
         onIngredientClickListener.onIngredientClicked(ingredients);
     }
 
@@ -65,4 +68,5 @@ public class IngredientFragment extends Fragment {
             Log.e("IngredientFragment", e.getMessage());
         }
     }
+
 }
