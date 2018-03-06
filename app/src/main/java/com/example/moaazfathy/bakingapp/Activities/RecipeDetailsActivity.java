@@ -128,6 +128,7 @@ public class RecipeDetailsActivity extends AppCompatActivity
             if (twoPaneMode) {
                 stepDetailsFragment.setVideo(video);
                 stepDetailsFragment.setDescription(description);
+                stepDetailsFragment.setThumbnail(thumbnail);
                 manager.beginTransaction().replace(R.id.details_container, stepDetailsFragment, "stepDetailsFragment")
                         .detach(stepDetailsFragment)
                         .attach(stepDetailsFragment)

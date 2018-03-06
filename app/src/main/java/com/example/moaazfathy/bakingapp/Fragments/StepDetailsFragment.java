@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.moaazfathy.bakingapp.Constants;
@@ -27,6 +28,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +49,16 @@ public class StepDetailsFragment extends Fragment {
     TextView mStepVideo;
     @BindView(R.id.step_description)
     TextView mStepDescription;
+    @BindView(R.id.step_thumbnail)
+    ImageView mThumbnail;
     long position;
     private SimpleExoPlayer mPlayer;
-    private String description, video;
+    private String description, video, thumbnail;
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
 
     public void setDescription(String description) {
         this.description = description;
@@ -59,19 +68,27 @@ public class StepDetailsFragment extends Fragment {
         this.video = video;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_step_details, container, false);
-        ButterKnife.bind(this, view);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         position = C.TIME_UNSET;
         if (savedInstanceState != null) {
             description = savedInstanceState.getString(Constants.DESCRIPTION);
             video = savedInstanceState.getString(Constants.VIDEO);
             position = savedInstanceState.getLong(Constants.VIDEO_STATE);
+            thumbnail = savedInstanceState.getString(Constants.THUMBNAIL);
             Log.e("StepDetFrag , getSave", position + "");
-
         }
+
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_step_details, container, false);
+        ButterKnife.bind(this, view);
+
         setupUi();
 
         return view;
@@ -91,10 +108,13 @@ public class StepDetailsFragment extends Fragment {
                 mStepVideo.setVisibility(View.GONE);
                 setupMediaPlayer(Uri.parse(video));
             }
-        }else {
+        } else {
             mStepVideo.setText("No Video");
             mStepVideo.setVisibility(View.VISIBLE);
             mVideoPlayer.setVisibility(View.GONE);
+        }
+        if (!(thumbnail == null || TextUtils.isEmpty(thumbnail))) {
+            imageLoader(thumbnail);
         }
     }
 
@@ -136,6 +156,7 @@ public class StepDetailsFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putString(Constants.VIDEO, video);
         outState.putString(Constants.DESCRIPTION, description);
+        outState.putString(Constants.THUMBNAIL, thumbnail);
         outState.putLong(Constants.VIDEO_STATE, position);
         Log.e("StepDetFrag , outState", position + "");
 
@@ -150,10 +171,21 @@ public class StepDetailsFragment extends Fragment {
                 description = savedInstanceState.getString(Constants.DESCRIPTION);
                 video = savedInstanceState.getString(Constants.VIDEO);
                 position = savedInstanceState.getLong(Constants.VIDEO_STATE);
+                thumbnail = savedInstanceState.getString(Constants.THUMBNAIL);
                 Log.e("StepDetFrag , getSave", position + "");
 
             }
         }
     }
 
+    private void imageLoader(String url) {
+        try {
+            Picasso.with(getActivity())
+                    .load(url)
+                    .error(R.mipmap.cheef_logo)
+                    .into(mThumbnail);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

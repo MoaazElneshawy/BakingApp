@@ -41,5 +41,11 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp"
             tools:text="@string/ingredients" />
+        <ImageView
+            android:id="@+id/step_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_margin="5dp"
+            android:src="@mipmap/ic_logo" />
     </LinearLayout>
 </RelativeLayout>
