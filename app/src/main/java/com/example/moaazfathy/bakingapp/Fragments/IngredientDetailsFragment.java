@@ -45,6 +45,7 @@ public class IngredientDetailsFragment extends Fragment {
         ButterKnife.bind(this, view);
         if (savedInstanceState != null) {
             layoutManagerSavedState = savedInstanceState.getParcelable(Constants.LIST_STATE);
+            ingredients = savedInstanceState.getParcelableArrayList(Constants.INGREDIENTS);
         }
         setUpRV();
         return view;
@@ -55,7 +56,6 @@ public class IngredientDetailsFragment extends Fragment {
         if (ingredients != null)
             adapter = new IngredientsDetailsAdapter(ingredients, getActivity());
         mIngredientDetailsRV.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
         if (layoutManagerSavedState != null)
             mIngredientDetailsRV.getLayoutManager().onRestoreInstanceState(layoutManagerSavedState);
     }
@@ -64,5 +64,6 @@ public class IngredientDetailsFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(Constants.LIST_STATE, mIngredientDetailsRV.getLayoutManager().onSaveInstanceState());
+//        outState.putParcelable(Constants.INGREDIENTS, (Parcelable) ingredients);
     }
 }

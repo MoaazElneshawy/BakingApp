@@ -64,14 +64,14 @@ public class StepDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_step_details, container, false);
         ButterKnife.bind(this, view);
-//        position = C.TIME_UNSET;
-//        if (savedInstanceState != null) {
-//            description = savedInstanceState.getString(Constants.DESCRIPTION);
-//            video = savedInstanceState.getString(Constants.VIDEO);
-//            position = savedInstanceState.getLong(Constants.VIDEO_STATE);
-//            Log.e("StepDetFrag , getSave", position + "");
-//
-//        }
+        position = C.TIME_UNSET;
+        if (savedInstanceState != null) {
+            description = savedInstanceState.getString(Constants.DESCRIPTION);
+            video = savedInstanceState.getString(Constants.VIDEO);
+            position = savedInstanceState.getLong(Constants.VIDEO_STATE);
+            Log.e("StepDetFrag , getSave", position + "");
+
+        }
         setupUi();
 
         return view;
@@ -91,6 +91,10 @@ public class StepDetailsFragment extends Fragment {
                 mStepVideo.setVisibility(View.GONE);
                 setupMediaPlayer(Uri.parse(video));
             }
+        }else {
+            mStepVideo.setText("No Video");
+            mStepVideo.setVisibility(View.VISIBLE);
+            mVideoPlayer.setVisibility(View.GONE);
         }
     }
 
