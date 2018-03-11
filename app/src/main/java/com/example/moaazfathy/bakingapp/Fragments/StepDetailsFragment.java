@@ -59,7 +59,6 @@ public class StepDetailsFragment extends Fragment {
         this.thumbnail = thumbnail;
     }
 
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -68,10 +67,12 @@ public class StepDetailsFragment extends Fragment {
         this.video = video;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_step_details, container, false);
+        ButterKnife.bind(this, view);
         position = C.TIME_UNSET;
         if (savedInstanceState != null) {
             description = savedInstanceState.getString(Constants.DESCRIPTION);
@@ -80,15 +81,6 @@ public class StepDetailsFragment extends Fragment {
             thumbnail = savedInstanceState.getString(Constants.THUMBNAIL);
             Log.e("StepDetFrag , getSave", position + "");
         }
-
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_step_details, container, false);
-        ButterKnife.bind(this, view);
-
         setupUi();
 
         return view;
@@ -97,6 +89,8 @@ public class StepDetailsFragment extends Fragment {
     private void setupUi() {
         if (description != null) {
             mStepDescription.setText(description);
+        } else {
+            mStepDescription.setText("No Description Added");
         }
         if (video != null) {
             if (TextUtils.isEmpty(video) || video.isEmpty()) {
@@ -125,7 +119,6 @@ public class StepDetailsFragment extends Fragment {
             mPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(), selector, control);
             mVideoPlayer.setPlayer(mPlayer);
             Log.e("StepDetFrag , setUp", position + "");
-
             String user = Util.getUserAgent(getActivity(), "BakingApp");
             MediaSource mediaSource = new ExtractorMediaSource(uri, new DefaultDataSourceFactory(getActivity(), user), new DefaultExtractorsFactory()
                     , null, null);
@@ -145,9 +138,10 @@ public class StepDetailsFragment extends Fragment {
         }
     }
 
+
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         stopPlayer();
     }
 
@@ -162,28 +156,25 @@ public class StepDetailsFragment extends Fragment {
 
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null) {
-            position = C.TIME_UNSET;
-            if (savedInstanceState != null) {
-                description = savedInstanceState.getString(Constants.DESCRIPTION);
-                video = savedInstanceState.getString(Constants.VIDEO);
-                position = savedInstanceState.getLong(Constants.VIDEO_STATE);
-                thumbnail = savedInstanceState.getString(Constants.THUMBNAIL);
-                Log.e("StepDetFrag , getSave", position + "");
-
-            }
-        }
-    }
-
     private void imageLoader(String url) {
         try {
             Picasso.with(getActivity())
                     .load(url)
                     .error(R.mipmap.cheef_logo)
                     .into(mThumbnail);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        try {
+            savedInstanceState.getLong(Constants.VIDEO_STATE);
+            savedInstanceState.getString(Constants.VIDEO);
+            savedInstanceState.getString(Constants.THUMBNAIL);
+            savedInstanceState.getString(Constants.DESCRIPTION);
         } catch (Exception e) {
             e.printStackTrace();
         }
